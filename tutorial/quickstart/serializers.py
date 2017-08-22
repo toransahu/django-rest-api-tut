@@ -1,12 +1,12 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
-class UserSerializer(serializer.HyperlinkedModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('url', 'username', 'email', 'groups')
 
-class GroupSerializer(serializer.HyperlinkedModelSerializer):
+class GroupSerializer(serializers.HyperlinkedModelSerializer):
     """
     Here we have not used serializer.ModelSerializer.
     But we wanted to implement relationships.

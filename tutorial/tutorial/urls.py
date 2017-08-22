@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from rest_framework import routers
-from tutorial.quickstart import views
+from quickstart import views
 
 """
 Routers is simple tool to speed-up implementing of API.

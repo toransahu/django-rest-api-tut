@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from tutorial.quickstart.serializers import UserSerializer, GroupSerializer
+from quickstart.serializers import UserSerializer, GroupSerializer
 
 # Create your views here.
 
@@ -13,7 +13,7 @@ class UserViewSet(viewsets.ModelViewSet):
     API endpoint (URL) that allows USERs to be viewed or edited.
     """
 
-    queryset  = User.objects.all().order_by(''-date_joined')
+    queryset  = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
 
 class GroupViewSet(viewsets.ModelViewSet):
