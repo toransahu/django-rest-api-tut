@@ -52,6 +52,11 @@ class SnippetSerializer(serializers.Serializer):
 class SnippetSerializer(serializers.ModelSerializer):
 """
 Creating new serializer class by inheriting ModelSerializer class.
+This will help us avoid replicating all information from Snippet Model.
+(Better than Serializer class)
+*An automatically determined set of fields.
+*Simple default implementations for the create() and update() methods.
+
 """
     class Meta:
         model = Snippet
@@ -61,4 +66,3 @@ Creating new serializer class by inheriting ModelSerializer class.
         ""
         fields =  ('id','title','code','linenos','language','style')
         #fields = '__all__'
-        
