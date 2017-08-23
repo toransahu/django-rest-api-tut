@@ -2,7 +2,7 @@ from rest_framework import serializers
 from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 
 
-"""
+'''"""
 Commenting out this because:
 Our SnippetSerializer class is replicating a lot of information that's also contained in the Snippet model. It would be nice if we could keep our code a bit more concise.
 
@@ -48,21 +48,21 @@ class SnippetSerializer(serializers.Serializer):
         instance.save()
         return instance
 """
+"""'''
 
 class SnippetSerializer(serializers.ModelSerializer):
-"""
-Creating new serializer class by inheriting ModelSerializer class.
-This will help us avoid replicating all information from Snippet Model.
-(Better than Serializer class)
-*An automatically determined set of fields.
-*Simple default implementations for the create() and update() methods.
-
-"""
+    """
+    Creating new serializer class by inheriting ModelSerializer class.
+    This will help us avoid replicating all information from Snippet Model.
+    (Better than Serializer class)
+    *An automatically determined set of fields.
+    *Simple default implementations for the create() and update() methods.
+    """
     class Meta:
         model = Snippet
         """
         fields= (), tells about what fields are to be sent in response.
         To send all the fields available in Model, use fields '__all__'.
-        ""
+        """
         fields =  ('id','title','code','linenos','language','style')
         #fields = '__all__'
