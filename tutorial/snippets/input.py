@@ -16,6 +16,9 @@ snippet = Snippet(code='foo = "bar"\n')
 snippet.save()
 
 snippet = Snippet(code='print "hello, world"\n')
+"""
+Calling .save() will either create a new instance, or update an existing instance, depending on if an existing instance was passed when instantiating the serializer class.
+"""
 snippet.save()
 """
 We've now got a few snippet instances to play with. Let's take a look at serializing one of those instances.
