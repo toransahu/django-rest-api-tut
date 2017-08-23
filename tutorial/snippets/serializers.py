@@ -1,6 +1,13 @@
 from rest_framework import serializers
 from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 
+
+"""
+Commenting out this because:
+Our SnippetSerializer class is replicating a lot of information that's also contained in the Snippet model. It would be nice if we could keep our code a bit more concise.
+
+In the same way that Django provides both Form classes and ModelForm classes, REST framework includes both Serializer classes, and ModelSerializer classes.
+
 class SnippetSerializer(serializers.Serializer):
     """
     The first part of the serializer class defines the fields that get serialized/deserialized. The create() and update() methods define how fully fledged instances are created or modified when calling serializer.save()
@@ -15,9 +22,13 @@ class SnippetSerializer(serializers.Serializer):
     language = serializers.ChoiceField(choices=LANGUAGE_CHOICES, default='python')
     style = serializers.ChoiceField(choices=STYLE_CHOICES, default='friendly')
 
+    """
+    validated_data is pre-defined variable, gets initialized when serializer.is_valid() is called.
+    """
+
     def create(self, validated_data):
         """
-        Creat and return a new 'Snippet' instance, given the validated data.
+        Create and return a new 'Snippet' instance, given the validated data.
         """
         # **keyaurgs to a func in python means passing variable number of aurguments to a method with variable name/keywords
         return Snippet.objects.create(**validated_data)
@@ -36,3 +47,18 @@ class SnippetSerializer(serializers.Serializer):
         instance.style = validated_data.get('style', instance.style)
         instance.save()
         return instance
+"""
+
+class SnippetSerializer(serializers.ModelSerializer):
+"""
+Creating new serializer class by inheriting ModelSerializer class.
+"""
+    class Meta:
+        model = Snippet
+        """
+        fields= (), tells about what fields are to be sent in response.
+        To send all the fields available in Model, use fields '__all__'.
+        ""
+        fields =  ('id','title','code','linenos','language','style')
+        #fields = '__all__'
+        
