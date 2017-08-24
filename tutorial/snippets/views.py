@@ -26,6 +26,12 @@ def snippet_list(request):
         return JsonResponse(serializer.errors, status=400)
 
 @csrf_exempt
+"""
+Note that because we want to be able to POST to this view from clients that won't have a CSRF token we need to mark the view as csrf_exempt. 
+This isn't something that you'd normally want to do, 
+and REST framework views actually use more sensible behavior than this,
+but it'll do for our purposes right now.
+"""
 def snippet_detail(request,pk):
     """
     Retrieve, update or delete a code snippet.
