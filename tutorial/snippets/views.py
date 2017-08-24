@@ -22,16 +22,20 @@ def snippet_list(request):
         serializer = SnippetSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
+            return JsonResponse(serializer.data, status=201) #201 for created
+        """
+	400 for bad request.
+	The client to the server didn't follow the rules.
+	"""
         return JsonResponse(serializer.errors, status=400)
-
-@csrf_exempt
+		
 """
-Note that because we want to be able to POST to this view from clients that won't have a CSRF token we need to mark the view as csrf_exempt. 
-This isn't something that you'd normally want to do, 
+Note that because we want to be able to POST to this view from clients that wont have a CSRF token we need to mark the view as csrf_exempt. 
+This isnt something that youd normally want to do, 
 and REST framework views actually use more sensible behavior than this,
 but it'll do for our purposes right now.
 """
+@csrf_exempt
 def snippet_detail(request,pk):
     """
     Retrieve, update or delete a code snippet.
@@ -39,7 +43,7 @@ def snippet_detail(request,pk):
     try:
         snippet = Snippet.objects.get(pk=pk)
     except Snippet.DoesNotExist:
-        return HttpResponse(status=404)
+        return HttpResponse(status=404) #page not found
 
     if request.method == 'GET':
         serializer = SnippetSerializer(snippet)
@@ -51,9 +55,14 @@ def snippet_detail(request,pk):
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
+        return JsonResponse(serializer.errors, status=400) #bad request
 
     elif request.method == 'DELETE':
         snippet.delete()
+        """
+	The HTTP 204 No Content success status response code indicates that the request has succeed, 
+	but that the client doesn't need to go away from its current page.
+	"""
         return HttpResponse(status=204)
+		
         
