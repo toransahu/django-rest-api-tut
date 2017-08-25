@@ -1,6 +1,9 @@
 """
 Removing JSON related modules/classes
 
+We're no longer explicitly tying our requests or responses to a given content type.
+request.data can handle incoming json requests, but it can also handle other formats.
+
 #from django.http import HttpResponse, JsonResponse
 #from django.views.decorators.csrf import csrf_exempt
 #from rest_framework.renderers import JSONRenderer
