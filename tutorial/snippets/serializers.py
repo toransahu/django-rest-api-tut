@@ -19,7 +19,19 @@ class SnippetSerializer(serializers.ModelSerializer):
         """
         fields =  ('id','title','code','linenos','language','style')
         #fields = '__all__'
+        """
+        adding this to reflect association of Snippets & Users.
+        """
+        owner = serializers.ReadOnlyField(source='owner.username')
 
+        """
+        The field we've added is the untyped ReadOnlyField class,
+        in contrast to the other typed fields, such as CharField, BooleanField etc...
+        The untyped ReadOnlyField is always read-only, and will be used for serialized representations,
+        but will not be used for updating model instances when they are deserialized.
+        We could have also used CharField(read_only=True) here.
+        """
+        
 class UserSerializer(serializers.ModelSerializer):
     snippets = serializers.PrimaryKeyRelatedField(many=True, queryset=Snippet.objects.all())
     """
