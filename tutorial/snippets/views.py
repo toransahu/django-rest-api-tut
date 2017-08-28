@@ -1,116 +1,57 @@
-"""
-Removing JSON related modules/classes
-
-We're no longer explicitly tying our requests or responses to a given content type.
-request.data can handle incoming json requests, but it can also handle other formats.
-
-#from django.http import HttpResponse, JsonResponse
-#from django.views.decorators.csrf import csrf_exempt
-#from rest_framework.renderers import JSONRenderer
-#from rest_framework.parsers import JSONParser
-"""
-
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-
 from snippets.models import Snippet
 from snippets.serializers import SnippetSerializer
-
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.http import Http404
 
 
 
 # Create your views here.
-"""
-Commenting out this to use @api_view
-@csrf_exempt
-"""
-@api_view(['GET','POST'])
-def snippet_list(request, format=None):
-    """
-    Adding support for format suffixes to our API endpoints.
-    Using format suffixes gives us URLs that explicitly refer to a given format,
-    and means our API will be able to handle URLs such as http://example.com/api/items/4.json.
 
-    List all code snippets, or create a new snippet.
+class SnippetList(APIView):
     """
-    if request.method == 'GET':
+    List all snippets, or crete a new snippet.
+    """
+    def get(self,request,format=None):
         snippets = Snippet.objects.all()
-        serializer = SnippetSerializer(snippets, many=True)
-        """
-        Commenting out this to use 'Response'
-        return JsonResponse(serializer.data, safe=False)
-        """
+        serializer = SnippetSerializer(snippets,many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
-        """
-        Commenting out this to use 'request.data'
-        data = JSONParser().parse(request)
-        """
-        data =request.data
-        serializer = SnippetSerializer(data=data)
+    def post(self, request, format=None):
+        serializer = SnippetSerializer(data=reuest.data)
         if serializer.is_valid():
             serializer.save()
-            """
-            Commenting out this to use 'Response' and named status code
-            return JsonResponse(serializer.data, status=201) #201 for created
-            """
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        """
-	    400 for bad request.
-        The client to the server didn't follow the rules.
-        """
-        """
-        Commenting out this to use 'Response' and named status code
-        return JsonResponse(serializer.errors, status=400)
-        """
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-"""
-Note that because we want to be able to POST to this view from clients that wont have a CSRF token we need to mark the view as csrf_exempt.
-This isnt something that youd normally want to do,
-and REST framework views actually use more sensible behavior than this,
-but it'll do for our purposes right now.
-"""
-
-"""
-Commenting out to use @api_view
-@csrf_exempt
-"""
-
-@api_view(['GET','PUT','DELETE'])
-def snippet_detail(request,pk, format=None):
+            return Response(serializer.data, status=status.HTTP_CREATED)
+        return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST)
+    
+class SnippetDetail(APIView):
     """
-    Retrieve, update or delete a code snippet.
+    Retrieve, update or delete a snippet instance.
     """
-    try:
-        snippet = Snippet.objects.get(pk=pk)
-    except Snippet.DoesNotExist:
-        """
-        Commenting out ot use 'Response'
-        return HttpResponse(status=404) #page not found
-        """
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
+    def get_object(self, pk):
+        try:
+            return Snippet.objects.get(pk=pk)
+        except Snippet.DoesNotExist:
+            return Http404
+
+
+    def get(self, request, pk, format=None):
+        snippet = self.get_object(pk)
         serializer = SnippetSerializer(snippet)
-        #return JsonResponse(serializer.data)
         return Response(serializer.data)
 
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = SnippetSerializer(snippet,data=data)
+    def put(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = SnippetSerializer(snippet,data=request.data)
         if serializer.is_valid():
-            serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) #bad request
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
+    def delete(self, request, pk, format=None):
+        snippet = self.get_object(pk)
         snippet.delete()
-        """
-	    The HTTP 204 No Content success status response code indicates that the request has succeed,
-	    but that the client doesn't need to go away from its current page.
-	    """
-        return Response(status=status.HTTP_204_NO_CLIENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
