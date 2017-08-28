@@ -26,8 +26,12 @@ Commenting out this to use @api_view
 @csrf_exempt
 """
 @api_view(['GET','POST'])
-def snippet_list(request):
+def snippet_list(request, format=None):
     """
+    Adding support for format suffixes to our API endpoints.
+    Using format suffixes gives us URLs that explicitly refer to a given format,
+    and means our API will be able to handle URLs such as http://example.com/api/items/4.json.
+
     List all code snippets, or create a new snippet.
     """
     if request.method == 'GET':
@@ -77,7 +81,7 @@ Commenting out to use @api_view
 """
 
 @api_view(['GET','PUT','DELETE'])
-def snippet_detail(request,pk):
+def snippet_detail(request,pk, format=None):
     """
     Retrieve, update or delete a code snippet.
     """
@@ -92,10 +96,7 @@ def snippet_detail(request,pk):
 
     if request.method == 'GET':
         serializer = SnippetSerializer(snippet)
-        """
-        Commenting out ot use 'Response'
-        return JsonResponse(serializer.data)
-        """"
+        #return JsonResponse(serializer.data)
         return Response(serializer.data)
 
     elif request.method == 'PUT':
@@ -109,7 +110,7 @@ def snippet_detail(request,pk):
     elif request.method == 'DELETE':
         snippet.delete()
         """
-	The HTTP 204 No Content success status response code indicates that the request has succeed,
-	but that the client doesn't need to go away from its current page.
-	"""
+	    The HTTP 204 No Content success status response code indicates that the request has succeed,
+	    but that the client doesn't need to go away from its current page.
+	    """
         return Response(status=status.HTTP_204_NO_CLIENT)
