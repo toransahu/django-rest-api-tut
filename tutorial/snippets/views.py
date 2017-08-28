@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 
 from rest_framework import permissions
 
+from snippets.permissions import IsOwnerOrReadOnly
+
 
 # Create your views here.
 
@@ -52,8 +54,12 @@ class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     To make sure that only authenticated users are able to
     create, update and delete code snippets.
+    
+    To maintane 'Object level permissions'.
+    To make sure that only the user that
+    created a code snippet is able to update or delete it.
     """
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 
     
 class UserList(generics.ListAPIView):
