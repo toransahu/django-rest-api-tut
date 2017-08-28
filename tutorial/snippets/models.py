@@ -55,4 +55,4 @@ class Snippet(models.Model):
                                   full=True,
                                   **options)
         self.highlighted = highlight(self.code, lexer, formatter)
-        super(snippet, self).save(*args, **kwargs)
+        super(Snippet, self).save(*args, **kwargs)
