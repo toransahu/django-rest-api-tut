@@ -17,6 +17,19 @@ class SnippetList(generics.ListCreateAPIView):
     
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
+
+    """
+    [+] Associating Snippets with users.
+        The way we deal with that is
+        by overriding a .perform_create() method on our snippet views,
+        that allows us to modify how the instance save is managed,
+        and handle any information that is implicit in the incoming request or requested URL.
+
+        The create() method of our serializer will now be passed an additional 'owner' field,
+        along with the validated data from the request.
+    """
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
     
 class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     """
