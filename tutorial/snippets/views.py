@@ -9,6 +9,12 @@ from rest_framework import permissions
 
 from snippets.permissions import IsOwnerOrReadOnly
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+from rest_framework import renderers
+
+
 
 # Create your views here.
 
@@ -69,4 +75,30 @@ class UserList(generics.ListAPIView):
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    
+
+"""
+1. Fucntion-based view for API root URL, using @api_view.
+2. Using 'reverse' to return fully-qualified URLs.
+"""
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response(
+        {
+            'users': reverse('user-list', request=request, format=format),
+            'snippets': reverse('snippet-list', request=request, format=format)
+        }
+    )
+                             
+"""
+1. Class-based view for Highlighted code snippet end-point, and will create our custom get func.
+2. Here we are not returning an object instance, but instead a property of an object instance.
+"""
+class SnippetHighlight(generics.GenericAPIView):
+    queryset = Snippet.objects.all()
+    renderer_classes = (renderers.StaticHTMLRenderer,)
+
+    def get(self, request, *args, **kwargs):
+        snippet = self.get_object()
+        return Response(snippet.highlighted)
+        
