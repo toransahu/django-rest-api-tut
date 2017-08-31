@@ -83,6 +83,14 @@ class UserDetail(generics.RetrieveAPIView):
 
 @api_view(['GET'])
 def api_root(request, format=None):
+    """
+    [+]django_framework.reverse()
+    1. Signature: reverse(viewname, *args, **kwargs)
+    2. Has the same behavior as django.urls.reverse,
+    except that it returns a fully qualified URL,
+    using the request to determine the host and port.
+    3. 'user-list' and 'snippet-list' are URL name in snippets/url.py
+    """
     return Response(
         {
             'users': reverse('user-list', request=request, format=format),
