@@ -29,6 +29,22 @@ structure of URLs.
 That way you don't have to create your urlpatterns by hand and
 you're guaranteed that all of your urls are consistent.
 """
+
+"""
+There are two mandatory arguments to the register() method:
+
+prefix - The URL prefix to use for this set of routes.
+viewset - The viewset class.
+Optionally, you may also specify an additional argument:
+
+base_name - The base to use for the URL names that are created. 
+
+URL pattern: ^users/$ Name: 'user-list'
+URL pattern: ^users/{pk}/$ Name: 'user-detail'
+URL pattern: ^accounts/$ Name: 'account-list'
+URL pattern: ^accounts/{pk}/$ Name: 'account-detail'
+"""
+
 router = routers.DefaultRouter()
 router.register(r'quickstart/users', views.UserViewSet)
 router.register(r'quickstart/groups', views.GroupViewSet)
