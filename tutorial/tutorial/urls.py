@@ -30,8 +30,8 @@ That way you don't have to create your urlpatterns by hand and
 you're guaranteed that all of your urls are consistent.
 """
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+router.register(r'quickstart/users', views.UserViewSet)
+router.register(r'quickstart/groups', views.GroupViewSet)
 
 """
 Because we're using viewsets instead of views, we can automatically generate the URL conf for our API, by simply registering the viewsets with a router class.
