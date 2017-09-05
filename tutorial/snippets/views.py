@@ -25,14 +25,14 @@ class SnippetViewSet(viewsets.ModelViewSet):
 
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)    
-    
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
+
     @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
     def highlight(self, request, *args, **kwargs):
         snippet = self.get_object()
         return Response(snippet.highlighted)
 
-    
+
     ##@detail_route decorator to create a custom action, named highlight.
     ##This decorator can be used to add any custom endpoints
     ##that don't fit into the standard create/update/delete style.
@@ -43,17 +43,17 @@ class SnippetViewSet(viewsets.ModelViewSet):
     ##The URLs for custom actions by default depend on the method name itself.
     ##If you want to change the way url should be constructed,
     ##you can include url_path as a decorator keyword argument.
-    
+
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
- 
+
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
     1. This viewset automatically provides `list` and `detail` actions.
 
     2. We've used the ReadOnlyModelViewSet class to automatically provide the default 'read-only' operations.
-    
+
     3. REST framework includes an abstraction for dealing with ViewSets,
     that allows the developer to concentrate on modeling the state and interactions of the API,
     and leave the URL construction to be handled automatically, based on common conventions.
@@ -64,25 +64,3 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-    
-
-@api_view(['GET'])
-def api_root(request, format=None):
-    """
-    1. Fucntion-based view for API root URL, using @api_view.
-    2. Using 'reverse' to return fully-qualified URLs.
-        [+]django_framework.reverse()
-        1. Signature: reverse(viewname, *args, **kwargs)
-        2. Has the same behavior as django.urls.reverse,
-        except that it returns a fully qualified URL,
-        using the request to determine the host and port.
-        3. 'user-list' and 'snippet-list' are URL name in snippets/url.py
-    """
-    return Response(
-        {
-            'users': reverse('user-list', request=request, format=format),
-            'snippets': reverse('snippet-list', request=request, format=format)
-        }
-    )
-  
