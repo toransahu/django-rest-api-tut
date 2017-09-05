@@ -1,0 +1,1 @@
+1. Find workaroud to User end-point conflict between app-snippet & app-quickstart API.
