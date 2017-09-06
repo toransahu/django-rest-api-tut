@@ -4,6 +4,7 @@ from snippets import views
 import snippets
 from rest_framework import routers
 
+
 # Create a router and register our viewsets with it.
 router = routers.DefaultRouter()
 #router = routers.SimpleRouter()
