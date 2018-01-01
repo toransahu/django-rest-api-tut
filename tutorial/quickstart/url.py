@@ -1,4 +1,4 @@
-from django.conf.urls import url, include
+from django.urls import path, include
 from rest_framework import routers
 from quickstart import views
 
@@ -45,5 +45,5 @@ router.register(r'groups', views.GroupViewSet)
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
-    url(r'^',include(router.urls)),
+    path('',include(router.urls)),
 ]
